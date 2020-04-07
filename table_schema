@@ -1,0 +1,99 @@
+-- Table: public.employees
+
+-- DROP TABLE public.employees;
+
+CREATE TABLE public.employees
+(
+    emp_no integer NOT NULL,
+    birth_date date NOT NULL,
+    first_name character varying COLLATE pg_catalog."default" NOT NULL,
+    last_name character varying COLLATE pg_catalog."default" NOT NULL,
+    gender "char" NOT NULL,
+    hire_date date NOT NULL,
+    CONSTRAINT "Employees_pkey" PRIMARY KEY (emp_no)
+);
+-- Table: public.departments
+
+-- DROP TABLE public.departments;
+
+CREATE TABLE public.departments
+(
+    dept_no character varying(5) COLLATE pg_catalog."default" NOT NULL,
+    dept_name character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "Departments_pkey" PRIMARY KEY (dept_no)
+);
+
+-- Table: public.salaries
+
+-- DROP TABLE public.salaries;
+
+CREATE TABLE public.salaries
+(
+    emp_no integer NOT NULL,
+    salary numeric NOT NULL,
+    from_date date NOT NULL,
+    to_date date NOT NULL,
+    CONSTRAINT "Salaries_pkey" PRIMARY KEY (emp_no),
+    CONSTRAINT "FK_Saries" FOREIGN KEY (emp_no)
+        REFERENCES public.employees (emp_no) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
+-- Table: public.titles
+
+-- DROP TABLE public.titles;
+
+CREATE TABLE public.titles
+(
+    emp_no integer NOT NULL,
+    title character varying COLLATE pg_catalog."default" NOT NULL,
+    from_date date,
+    to_date date,
+    CONSTRAINT "FK_tittles" FOREIGN KEY (emp_no)
+        REFERENCES public.employees (emp_no) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
+-- Table: public.dept_emp
+
+-- DROP TABLE public.dept_emp;
+
+CREATE TABLE public.dept_emp
+(
+    emp_no integer NOT NULL,
+    dept_no character varying(5) COLLATE pg_catalog."default" NOT NULL,
+    from_date date,
+    to_date date,
+    CONSTRAINT "FK_dept1" FOREIGN KEY (dept_no)
+        REFERENCES public.departments (dept_no) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT "FK_emp1" FOREIGN KEY (emp_no)
+        REFERENCES public.employees (emp_no) MATCH SIMPLE
+        ON UPDATE RESTRICT
+        ON DELETE NO ACTION
+);
+
+-- Table: public.dept_manager
+
+-- DROP TABLE public.dept_manager;
+
+CREATE TABLE public.dept_manager
+(
+    dept_no character varying(5) COLLATE pg_catalog."default" NOT NULL,
+    emp_no integer NOT NULL,
+    from_date date,
+    to_date date,
+    CONSTRAINT "FK_DEP_MGR_DEPT" FOREIGN KEY (dept_no)
+        REFERENCES public.departments (dept_no) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT "FK_DEP_MGR_EMP" FOREIGN KEY (emp_no)
+        REFERENCES public.employees (emp_no) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
